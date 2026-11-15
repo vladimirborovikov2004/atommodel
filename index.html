@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Строение атома</title>
+<style>
+:root{--bg:#f4f6fb;--panel:#ffffff;--text:#14213d;--muted:#5b6785;--line:#cdd5e6;--p:#e03e45;--p2:#c0343a;--p3:#962a2f;--n:#8a90a6;--n2:#6f7590;--n3:#565c75;--e:#2f54d6;--halo:#e3e9fb;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1730;--panel:#172042;--text:#eef1fb;--muted:#a3aed0;--line:#33406d;--p:#ff6b72;--p2:#e0575e;--p3:#b84349;--n:#9aa1bb;--n2:#7e85a1;--n3:#646b87;--e:#7f9bff;--halo:#243569;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1730;--panel:#172042;--text:#eef1fb;--muted:#a3aed0;--line:#33406d;--p:#ff6b72;--p2:#e0575e;--p3:#b84349;--n:#9aa1bb;--n2:#7e85a1;--n3:#646b87;--e:#7f9bff;--halo:#243569;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+main{max-width:920px;margin:0 auto;padding:16px}
+h1{font:700 1.6rem/1.2 Georgia,"Times New Roman",serif;margin:4px 0 14px}
+h2{font:700 1.2rem/1.2 Georgia,"Times New Roman",serif;margin:28px 0 10px}
+h3{font:700 1rem/1.2 Georgia,"Times New Roman",serif;margin:18px 0 8px}
+.grid{display:grid;gap:18px}
+@media(min-width:780px){.grid{grid-template-columns:1.15fr 1fr;align-items:start}}
+#atom{display:block;width:100%;max-width:460px;height:auto;margin:0 auto}
+.orbit{fill:none;stroke:var(--line);stroke-width:1.2}
+.p0{fill:var(--p3)}.p1{fill:var(--p2)}.p2{fill:var(--p)}.n0{fill:var(--n3)}.n1{fill:var(--n2)}.n2{fill:var(--n)}
+.p0,.p1,.p2,.n0,.n1,.n2{stroke:var(--bg);stroke-width:.7}
+.hl{fill:#fff;fill-opacity:.33}
+.halo{fill:var(--halo);stroke:var(--line);stroke-width:1.2}
+.ht{fill:var(--text);font:600 14px system-ui,sans-serif;text-anchor:middle}
+.hs{fill:var(--muted);font:500 12.5px system-ui,sans-serif;text-anchor:middle}
+.ce{fill:var(--e);stroke:var(--bg);stroke-width:1.2}
+.legend{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;color:var(--muted);font-size:.9rem;margin-top:6px}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.dot.p{background:var(--p)}.dot.n{background:var(--n)}.dot.e{background:var(--e)}
+.levels{text-align:center;margin:8px 0 0;font-weight:600}
+.q{position:relative;width:24px;height:24px;margin-left:6px;padding:0;border-radius:50%;border:1.5px solid var(--muted);background:none;color:var(--muted);font:700 .78rem/1 system-ui,sans-serif;cursor:pointer;vertical-align:middle}
+.q::after{content:"";position:absolute;inset:-9px}
+.side{display:grid;gap:18px}
+.ctrls{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px 14px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0}
+.row+.row{border-top:1px solid var(--line)}
+.lab{font-weight:600}
+.step{display:flex;gap:6px;align-items:center}
+.step button{width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-size:1.4rem;line-height:1;cursor:pointer}
+.step button:active{background:var(--line)}
+.step input{width:64px;height:44px;text-align:center;font-size:1.15rem;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--text)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--e);outline-offset:2px}
+.tilebox{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
+.tile{position:relative;width:156px;height:156px;flex:none;border:3px solid var(--text);background:var(--panel);display:grid;place-items:center}
+.sym{font:700 4rem/1 Georgia,"Times New Roman",serif}
+.mass{position:absolute;top:8px;right:10px;font-weight:600}
+.num{position:absolute;bottom:8px;right:10px;font-weight:700;font-size:1.15rem}
+.chg{position:absolute;top:8px;left:8px;min-width:34px;text-align:center;padding:1px 8px;border-radius:99px;color:#fff;font-weight:700;font-size:.95rem;background:#6b7085}
+.chg.pos{background:#d6333a}.chg.neg{background:#3451c9}
+.info{flex:1 1 190px}
+.name{font:700 1.3rem/1.2 Georgia,"Times New Roman",serif}
+.info p{margin:5px 0;color:var(--muted);font-size:.95rem}
+.info p b{color:var(--text)}
+.tw{overflow-x:auto;padding-bottom:8px}
+.pt{display:grid;grid-template-columns:22px repeat(18,36px);grid-template-rows:20px repeat(7,36px) 10px repeat(2,36px);gap:2px;width:max-content}
+.gh,.pn{display:grid;place-items:center;font-size:.7rem;color:var(--muted)}
+.cell{position:relative;padding:0;border:1px solid var(--line);border-radius:4px;background:var(--panel);color:var(--text);font:700 .85rem/1 system-ui,sans-serif;cursor:pointer}
+.cell small{position:absolute;top:2px;left:3px;font:500 .5rem/1 system-ui,sans-serif;color:var(--muted)}
+.cell:disabled{opacity:.4;cursor:default}
+.cell.on{background:var(--text);border-color:var(--text);color:var(--bg)}
+.cell.on small{color:var(--bg)}
+.cfg{font:1.35rem/1.6 Georgia,"Times New Roman",serif;margin:0}
+.cfg sup{font-size:.7em}
+#orb{display:block;width:100%;max-width:340px;height:auto}
+.ob{fill:none;stroke:var(--text);stroke-width:2.5}
+.ol{font:700 17px Georgia,"Times New Roman",serif;fill:var(--text)}
+.ar{fill:none;stroke:var(--e);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.tog{height:44px;border-radius:10px;border:1.5px solid var(--text);background:none;color:var(--text);font:600 1rem system-ui,sans-serif;cursor:pointer}
+.tog[aria-pressed="true"]{background:var(--text);color:var(--bg)}
+.info #ist{color:var(--text);font-weight:600}
+body.quiz .hideable{display:none}
+dialog{padding:0;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--text);max-width:min(380px,calc(100vw - 32px))}
+dialog::backdrop{background:rgba(10,15,35,.55)}
+.dbox{padding:18px}
+.dbox h2{margin:0 0 8px;font-size:1.15rem}
+.dbox p{margin:0 0 8px}
+.dbox button{margin-top:6px;height:40px;padding:0 18px;border:0;border-radius:10px;background:var(--text);color:var(--bg);font:600 1rem system-ui,sans-serif;cursor:pointer}
+</style>
+</head>
+<body>
+<main>
+<h1>Строение атома</h1>
+<div class="grid">
+  <section>
+    <svg id="atom" viewBox="-210 -210 420 420" role="img" aria-label="Модель атома"></svg>
+    <div class="legend"><span><i class="dot p"></i>протон</span><span><i class="dot n"></i>нейтрон</span><span><i class="dot e"></i>электрон</span></div>
+    <p class="levels hideable"><span id="lv"></span><button type="button" class="q" data-i="levels" aria-label="Пояснение: уровни">?</button></p>
+  </section>
+  <div class="side">
+    <section class="ctrls">
+      <div class="row"><span><label class="lab" for="p"><i class="dot p"></i>Протоны</label><button type="button" class="q" data-i="proton" aria-label="Пояснение: протоны">?</button></span><span class="step"><button type="button" data-f="p" data-d="-1" aria-label="Меньше протонов">−</button><input id="p" type="number" inputmode="numeric" min="1" max="118" value="11"><button type="button" data-f="p" data-d="1" aria-label="Больше протонов">+</button></span></div>
+      <div class="row"><span><label class="lab" for="n"><i class="dot n"></i>Нейтроны</label><button type="button" class="q" data-i="neutron" aria-label="Пояснение: нейтроны">?</button></span><span class="step"><button type="button" data-f="n" data-d="-1" aria-label="Меньше нейтронов">−</button><input id="n" type="number" inputmode="numeric" min="0" max="180" value="12"><button type="button" data-f="n" data-d="1" aria-label="Больше нейтронов">+</button></span></div>
+      <div class="row"><span><label class="lab" for="e"><i class="dot e"></i>Электроны</label><button type="button" class="q" data-i="electron" aria-label="Пояснение: электроны">?</button></span><span class="step"><button type="button" data-f="e" data-d="-1" aria-label="Меньше электронов">−</button><input id="e" type="number" inputmode="numeric" min="0" max="118" value="11"><button type="button" data-f="e" data-d="1" aria-label="Больше электронов">+</button></span></div>
+    </section>
+    <button type="button" class="tog" id="tog" aria-pressed="false">Скрыть информацию об атоме</button>
+    <section class="tilebox hideable">
+      <div class="tile"><span class="chg" id="chg"></span><span class="mass" id="mass"></span><span class="sym" id="sym"></span><span class="num" id="num"></span></div>
+      <div class="info">
+        <div class="name" id="name"></div>
+        <p>Изотоп: <b id="iso"></b><button type="button" class="q" data-i="isotope" aria-label="Пояснение: изотопы">?</button></p>
+        <p id="ist"></p>
+        <p>Порядковый номер: <b id="an"></b><button type="button" class="q" data-i="atnum" aria-label="Пояснение: порядковый номер">?</button></p>
+        <p>Атомная масса: <b id="am"></b><button type="button" class="q" data-i="mass" aria-label="Пояснение: атомная масса">?</button></p>
+        <p>Массовое число: <b id="mn"></b><button type="button" class="q" data-i="massnum" aria-label="Пояснение: массовое число">?</button></p>
+        <p>Заряд: <b id="qv"></b><span id="kind"></span><button type="button" class="q" data-i="charge" aria-label="Пояснение: заряд">?</button></p>
+        <p>Запись: <b id="note"></b><button type="button" class="q" data-i="note" aria-label="Пояснение: запись иона">?</button></p>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="hideable">
+<h2>Периодическая система<button type="button" class="q" data-i="table" aria-label="Пояснение: периодическая система">?</button></h2>
+<div class="tw"><div class="pt" id="pt"></div></div>
+
+<h2>Электронная конфигурация<button type="button" class="q" data-i="config" aria-label="Пояснение: электронная конфигурация">?</button></h2>
+<p class="cfg" id="cfg"></p>
+<h3>Орбитали<button type="button" class="q" data-i="orbitals" aria-label="Пояснение: орбитали">?</button></h3>
+<svg id="orb" role="img" aria-label="Заполнение орбиталей электронами"></svg>
+</div>
+</main>
+
+<dialog id="dlg"><form method="dialog" class="dbox"><h2 id="dt"></h2><div id="db"></div><button>Понятно</button></form></dialog>
+
+<script>
+const EL="H,Водород,1.01;He,Гелий,4.00;Li,Литий,6.94;Be,Бериллий,9.01;B,Бор,10.81;C,Углерод,12.01;N,Азот,14.01;O,Кислород,16.00;F,Фтор,19.00;Ne,Неон,20.18;Na,Натрий,22.99;Mg,Магний,24.31;Al,Алюминий,26.98;Si,Кремний,28.09;P,Фосфор,30.97;S,Сера,32.06;Cl,Хлор,35.45;Ar,Аргон,39.95;K,Калий,39.10;Ca,Кальций,40.08;Sc,Скандий,44.96;Ti,Титан,47.87;V,Ванадий,50.94;Cr,Хром,52.00;Mn,Марганец,54.94;Fe,Железо,55.85;Co,Кобальт,58.93;Ni,Никель,58.69;Cu,Медь,63.55;Zn,Цинк,65.38;Ga,Галлий,69.72;Ge,Германий,72.63;As,Мышьяк,74.92;Se,Селен,78.97;Br,Бром,79.90;Kr,Криптон,83.80;Rb,Рубидий,85.47;Sr,Стронций,87.62;Y,Иттрий,88.91;Zr,Цирконий,91.22;Nb,Ниобий,92.91;Mo,Молибден,95.95;Tc,Технеций,[98];Ru,Рутений,101.07;Rh,Родий,102.91;Pd,Палладий,106.42;Ag,Серебро,107.87;Cd,Кадмий,112.41;In,Индий,114.82;Sn,Олово,118.71;Sb,Сурьма,121.76;Te,Теллур,127.60;I,Йод,126.90;Xe,Ксенон,131.29;Cs,Цезий,132.91;Ba,Барий,137.33;La,Лантан,138.91;Ce,Церий,140.12;Pr,Празеодим,140.91;Nd,Неодим,144.24;Pm,Прометий,[145];Sm,Самарий,150.36;Eu,Европий,151.96;Gd,Гадолиний,157.25;Tb,Тербий,158.93;Dy,Диспрозий,162.50;Ho,Гольмий,164.93;Er,Эрбий,167.26;Tm,Тулий,168.93;Yb,Иттербий,173.05;Lu,Лютеций,174.97;Hf,Гафний,178.49;Ta,Тантал,180.95;W,Вольфрам,183.84;Re,Рений,186.21;Os,Осмий,190.23;Ir,Иридий,192.22;Pt,Платина,195.08;Au,Золото,196.97;Hg,Ртуть,200.59;Tl,Таллий,204.38;Pb,Свинец,207.20;Bi,Висмут,208.98;Po,Полоний,[209];At,Астат,[210];Rn,Радон,[222];Fr,Франций,[223];Ra,Радий,[226];Ac,Актиний,[227];Th,Торий,232.04;Pa,Протактиний,231.04;U,Уран,238.03;Np,Нептуний,[237];Pu,Плутоний,[244];Am,Америций,[243];Cm,Кюрий,[247];Bk,Берклий,[247];Cf,Калифорний,[251];Es,Эйнштейний,[252];Fm,Фермий,[257];Md,Менделевий,[258];No,Нобелий,[259];Lr,Лоуренсий,[266];Rf,Резерфордий,[267];Db,Дубний,[268];Sg,Сиборгий,[269];Bh,Борий,[270];Hs,Хассий,[277];Mt,Мейтнерий,[278];Ds,Дармштадтий,[281];Rg,Рентгений,[282];Cn,Коперниций,[285];Nh,Нихоний,[286];Fl,Флеровий,[289];Mc,Московий,[290];Lv,Ливерморий,[293];Ts,Теннессин,[294];Og,Оганесон,[294]".split(";").map(s=>s.split(","));
+const SYM=EL.map(x=>x[0]);
+const SUB=[[1,"s",2],[2,"s",2],[2,"p",6],[3,"s",2],[3,"p",6],[4,"s",2],[3,"d",10],[4,"p",6],[5,"s",2],[4,"d",10],[5,"p",6],[6,"s",2],[4,"f",14],[5,"d",10],[6,"p",6],[7,"s",2],[5,"f",14],[6,"d",10],[7,"p",6]];
+const OB={s:1,p:3,d:5,f:7},LIM={p:[1,118],n:[0,180],e:[0,118]};
+const CH="-1,1;;1;2;3;-4,-3,-2,-1,1,2,3,4;-3,-2,-1,1,2,3,4,5;-2,-1,1,2;-1;;1;2;3;-4,4;-3,1,3,5;-2,-1,2,4,6;-1,1,3,4,5,7;;1;2;3;2,3,4;2,3,4,5;2,3,6;2,3,4,6,7;2,3,6;2,3;2,3;1,2;2;3;2,4;-3,3,5;-2,2,4,6;-1,1,3,5,7;2;1;2;3;4;5;4,6;4,7;3,4,8;3;2,4;1;2;3;2,4;-3,3,5;-2,2,4,6;-1,1,3,5,7;2,4,6,8;1;2;3;3,4;3,4;3;3;2,3;2,3;3;3,4;3;3;3;3;2,3;3;4;5;4,6;4,7;4,8;3,4;2,4;1,3;1,2;1,3;2,4;3,5;-2,2,4;-1,1;2;1;2;3;4;4,5;3,4,5,6;3,4,5,6,7;3,4,5,6;3,4,5,6;3,4;3,4;3;3;3;3;2,3;3;4;5;6;7;8;;;;2;;;;;;".split(";").map(t=>t?t.split(",").map(Number):[]);
+const INFO={
+isotope:["Изотопы","Изотопы — атомы одного элемента с разным числом нейтронов, поэтому у них разные массовые числа.","Стабильный изотоп не распадается. Радиоактивный (нестабильный) со временем превращается в другое ядро. Период полураспада — время, за которое распадается половина атомов.","Стабильные изотопы одного элемента встречаются в природе в разных долях: например, углерод-12 составляет около 99 % атомов углерода, а углерод-13 — около 1 %.","Если нейтронов слишком мало или слишком много, ядро не удерживается вместе, и такого изотопа не существует."],
+proton:["Протоны","Протон — частица с положительным зарядом +1, она находится в ядре.","Число протонов равно порядковому номеру элемента. Именно оно определяет, какой это элемент: если изменить число протонов, получится атом другого элемента."],
+neutron:["Нейтроны","Нейтрон — частица без заряда, она тоже находится в ядре. Масса нейтрона почти равна массе протона.","Число нейтронов не меняет элемент, но меняет массу атома. Атомы одного элемента с разным числом нейтронов называют изотопами."],
+electron:["Электроны","Электрон — очень лёгкая частица с отрицательным зарядом −1. Электроны движутся вокруг ядра по энергетическим уровням.","В нейтральном атоме число электронов равно числу протонов. Если электронов больше или меньше, получается ион."],
+levels:["Энергетические уровни","Электроны располагаются на уровнях — электронных слоях. Наибольшее число электронов на уровне равно 2n², где n — номер уровня: 2, 8, 18, 32.","На внешнем уровне не может быть больше 8 электронов. Именно внешние электроны определяют химические свойства. У нейтрального атома число занятых уровней равно номеру периода."],
+atnum:["Порядковый номер","Порядковый номер равен числу протонов в ядре и заряду ядра.","У нейтрального атома он равен и числу электронов."],
+mass:["Атомная масса","Относительная атомная масса взята из таблицы Менделеева. Она усреднена по всем природным изотопам элемента, поэтому обычно дробная.","Её округлённое значение
